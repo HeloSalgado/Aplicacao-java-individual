@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="94be2b33-850a-46cb-a92a-1ad3351e5a9a" name="Changes" comment="" />
+    <list default="true" id="94be2b33-850a-46cb-a92a-1ad3351e5a9a" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app-individual/src/main/java/Entidades/Usuario.java" beforeDir="false" afterPath="$PROJECT_DIR$/app-individual/src/main/java/Entidades/Usuario.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app-individual/src/main/java/Main/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/app-individual/src/main/java/Main/App.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app-individual/src/main/java/Models/JanelasDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/app-individual/src/main/java/Models/JanelasDAO.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -10,12 +19,29 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;HeloSalgado&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">
+    <option name="selectedUrlAndAccountId">
+      <UrlAndAccount>
+        <option name="accountId" value="b11ed1af-c18d-41d2-a855-7b43621bee04" />
+        <option name="url" value="https://github.com/HeloSalgado/Aplicacao-java-individual.git" />
+      </UrlAndAccount>
+    </option>
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/app-individual/src/main/java/Main/App.java" root0="FORCE_HIGHLIGHTING" />
+  </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 0
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 0
+}</component>
   <component name="ProjectId" id="2fmG4kOxxyCgrAKYFzFoG3BfaUc" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -26,18 +52,24 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/helos/OneDrive - SPTech School/2º Semestre/Pesquisa e Inovação II/Aplicacao-java-individual",
+    "last_opened_file_path": "C:/Users/helos/OneDrive - SPTech School/2º Semestre/Pesquisa e Inovação II/Aplicacao-java-individual/app-individual",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
     "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mysql_aurora_aws"
+    ]
   }
 }]]></component>
-  <component name="SharedIndexes">
-    <attachedChunks>
-      <set>
-        <option value="jdk-17.0.9-corretto-17.0.9-f644763e9732-ebaef533" />
-      </set>
-    </attachedChunks>
-  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -47,6 +79,13 @@
       <option name="presentableId" value="Default" />
       <updated>1714398651341</updated>
       <workItem from="1714398652808" duration="61000" />
+      <workItem from="1714434625307" duration="467000" />
+      <workItem from="1714435175195" duration="281000" />
+      <workItem from="1714476930420" duration="1306000" />
+      <workItem from="1714478295175" duration="250000" />
+      <workItem from="1714478553656" duration="50000" />
+      <workItem from="1714478621143" duration="168000" />
+      <workItem from="1714478988907" duration="256000" />
     </task>
     <servers />
   </component>
