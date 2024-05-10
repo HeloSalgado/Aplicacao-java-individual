@@ -4,7 +4,6 @@ import Models.UsuarioDAO;
 import Main.App;
 
 import java.awt.*;
-import java.io.Console;
 import java.util.Scanner;
 
 public class Usuario {
@@ -16,29 +15,41 @@ public class Usuario {
         this.senha = senha;
     }
 
-    public static void FazerLogin(){
+    public static void fazerLogin(){
         Scanner leitor = new Scanner(System.in);
 
-        System.out.println("+-------------------------------+");
-        System.out.println("|       Entre na sua conta      ");
-        System.out.print("| Email: ");
-        String email = leitor.next();
+        System.out.println("+-------------------------------------------+");
+        System.out.println("|            Entre na sua conta              ");
+        System.out.println("|   Pressione a tecla [ENTER] para começar   ");
 
-        System.out.print("| Senha: ");
-        String senha = leitor.next();
-        System.out.println("+-------------------------------+");
+        if (leitor.hasNextLine()) {
+            System.out.print("| Email: ");
+            String email = leitor.next();
 
-        Usuario usuario = new Usuario(email, senha);
+            // Verifica se há mais entradas disponíveis antes de solicitar a senha
+            if (leitor.hasNextLine()) {
+                System.out.print("| Senha: ");
+                String senha = leitor.next();
+                System.out.println("+-------------------------------------------+");
 
-        boolean usuarioExiste = UsuarioDAO.verificarUsuario(usuario);
+                Usuario usuario = new Usuario(email, senha);
 
-        if (usuarioExiste){
-            App.Menu();
+                boolean usuarioExiste = UsuarioDAO.verificarUsuario(usuario);
+
+                if (usuarioExiste) {
+                    App.menu();
+                } else {
+                    System.out.println("Dados incorretos, tente novamente.");
+                    fazerLogin(); // Chama o método fazerLogin novamente após uma tentativa malsucedida
+                }
+            } else {
+                System.out.println("Entrada de senha não fornecida.");
+            }
         } else {
-            System.out.println("Dados incorretos, tente novamente.");
-            FazerLogin();
+            System.out.println("Entrada de email não fornecida.");
         }
     }
+
 
 
     public String getEmail() {

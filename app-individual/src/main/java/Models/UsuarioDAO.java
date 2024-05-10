@@ -23,7 +23,7 @@ public class UsuarioDAO {
                 return true;
             } else {
                 System.out.println("Acesso negado");
-                Usuario.FazerLogin();
+                Usuario.fazerLogin();
             }
 
         } catch (Exception e) {

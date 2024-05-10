@@ -34,10 +34,10 @@ public class App {
                                                                                     \s               
                 """);
 
-        Usuario.FazerLogin();
+        Usuario.fazerLogin();
     }
 
-    public static void Menu() {
+    public static void menu() {
         Looca looca = new Looca();
 
         Rede rede = looca.getRede();
@@ -234,6 +234,7 @@ public class App {
             Long idJanela;
             String titulo;
             Long pidJanela;
+
             Integer totalJanelas = janelas.getTotalJanelas();
             System.out.println("------ Janelas ------");
 
