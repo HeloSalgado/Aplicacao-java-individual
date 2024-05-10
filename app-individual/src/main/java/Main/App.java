@@ -9,8 +9,11 @@ import com.github.britooo.looca.api.group.janelas.Janela;
 import com.github.britooo.looca.api.group.janelas.JanelaGrupo;
 import com.github.britooo.looca.api.group.memoria.Memoria;
 import com.github.britooo.looca.api.group.processador.Processador;
+import com.github.britooo.looca.api.group.rede.Rede;
+
 import com.github.britooo.looca.api.group.sistema.Sistema;
 
+import java.sql.Time;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Scanner;
@@ -20,22 +23,79 @@ import java.util.concurrent.TimeUnit;
 
 public class App {
     public static void main(String[] args) {
-        System.out.println("""
-                Seja Bem Vindo(a) a
-                                
-                **      **  **  **   **  *******         ********  **********  *********    *********
-                ** **** **  **  ***  **  **     **      **         **      **  **      **   **
-                **  **  **  **  ** * **  **      **    **          **      **  *********    *****
-                **      **  **  **  ***  **     **      **         **      **  **   **      **
-                **      **  **  **   **  *******         ********  **********  **     **    *********
-                                
+        System.out.println("""       
+                         
+                ███╗   ███╗██╗███╗   ██╗██████╗      ██████╗ ██████╗ ██████╗ ███████╗
+                ████╗ ████║██║████╗  ██║██╔══██╗    ██╔════╝██╔═══██╗██╔══██╗██╔════╝
+                ██╔████╔██║██║██╔██╗ ██║██║  ██║    ██║     ██║   ██║██████╔╝█████╗ \s
+                ██║╚██╔╝██║██║██║╚██╗██║██║  ██║    ██║     ██║   ██║██╔══██╗██╔══╝ \s
+                ██║ ╚═╝ ██║██║██║ ╚████║██████╔╝    ╚██████╗╚██████╔╝██║  ██║███████╗
+                ╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝╚═════╝      ╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝
+                                                                                    \s               
                 """);
 
         Usuario.FazerLogin();
     }
 
     public static void Menu() {
+        Looca looca = new Looca();
+
+        Rede rede = looca.getRede();
+        String hostname = rede.getParametros().getHostName();
+        Computador computador = new Computador(hostname);
+
+        boolean maquinaExiste = ComputadorDAO.verificarComputador(computador);
+        Integer idMaquina = ComputadorDAO.buscarIdMaquina(computador);
+        String fkEmpresa = ComputadorDAO.buscarFkEmpresa(computador);
+
+        if (!maquinaExiste){
+            System.out.println("Máquina não está cadastrada");
+            System.exit(0);
+        }
+
+
+        PersistenciaDeDados persistenciaDeDados01 = new PersistenciaDeDados(0, 0, 0, 0,0, "", fkEmpresa);
+        List<String> dadosPersistencia = PersistenciaDAO.temPersistencia(persistenciaDeDados01);
+
+        int opcao = 0;
+
+        if (dadosPersistencia != null){
+            Scanner leitor = new Scanner(System.in);
+
+            System.out.println("Parâmetros de captura já cadastrados!");
+            System.out.println("""
+                    Deseja atualizar esses parâmetros?
+                    1 -> sim
+                    2 -> não
+                    
+                    Digite sua opção: """);
+            opcao = leitor.nextInt();
+
+            if (opcao == 1){
+                definicaoDeParametros(opcao, fkEmpresa, idMaquina);
+            } else {
+                CapturarDados(idMaquina, Integer.valueOf(dadosPersistencia.get(0)), Integer.valueOf(dadosPersistencia.get(1)), Integer.valueOf(dadosPersistencia.get(2)), Integer.valueOf(dadosPersistencia.get(3)), Integer.valueOf(dadosPersistencia.get(4)), dadosPersistencia.get(5));
+            }
+        } else {
+            System.out.println("Parâmetros para captura dos dados ainda não foram cadastrados...");
+            definicaoDeParametros(opcao, fkEmpresa, idMaquina);
+        }
+    }
+
+    public static void definicaoDeParametros(Integer opcao, String fkEmpresa, Integer fkMaquina){
         Scanner leitor = new Scanner(System.in);
+
+        System.out.println("""
+                Qual a unidade de tempo de captura desejada?
+                s -> Segundos
+                m -> Minutos
+                """);
+        String unidadeTempo = leitor.next();
+
+        if (!unidadeTempo.equals("s") && !unidadeTempo.equals("m")){
+            System.out.println("Unidade de tempo deve ser segundos ou minutos");
+            definicaoDeParametros(opcao, fkEmpresa, fkMaquina);
+        }
 
         System.out.println("De quanto em quanto tempo deseja capturar os seguintes dados?");
         System.out.print("Sistema Operacional: ");
@@ -55,28 +115,27 @@ public class App {
 
         if (tempoCapturaSO <= 0 || tempoCapturaRAM <= 0 || tempoCapturaDisco <= 0 || tempoCapturaCPU <= 0 || tempoCapturaJanelas <= 0){
             System.out.println("Tempo deve ser maior que 0");
-            Menu();
+            definicaoDeParametros(opcao, fkEmpresa, fkMaquina);
         }
 
-        System.out.println("""
-                Qual a unidade de tempo desejada?
-                s -> Segundos
-                m -> Minutos
-                """);
-        String unidadeTempo = leitor.next();
+        PersistenciaDeDados persistenciaDeDados = new PersistenciaDeDados(tempoCapturaSO, tempoCapturaRAM, tempoCapturaDisco, tempoCapturaCPU, tempoCapturaJanelas, unidadeTempo, fkEmpresa);
 
-        if (!unidadeTempo.equals("s") && !unidadeTempo.equals("m")){
-            System.out.println("Unidade de tempo deve ser segundos ou minutos");
-            Menu();
+        if (opcao == 1){
+            PersistenciaDAO.atualizarPersistencia(persistenciaDeDados);
+        } else {
+            PersistenciaDAO.cadastrarPersistencia(persistenciaDeDados);
         }
 
-        CapturarDados(tempoCapturaSO, tempoCapturaRAM, tempoCapturaDisco, tempoCapturaCPU, tempoCapturaJanelas, unidadeTempo);
+        CapturarDados(fkMaquina, tempoCapturaSO, tempoCapturaRAM, tempoCapturaDisco, tempoCapturaCPU, tempoCapturaJanelas, unidadeTempo);
     }
 
-    public static void CapturarDados(Integer tempoCapturaSO, Integer tempoCapturaRAM, Integer tempoCapturaDisco, Integer tempoCapturaCPU, Integer tempoCapturaJanela, String unidadeTempo) {
+    public static void CapturarDados(Integer fkMaquina, Integer tempoCapturaSO, Integer tempoCapturaRAM, Integer tempoCapturaDisco, Integer tempoCapturaCPU, Integer tempoCapturaJanela, String unidadeTempo) {
         Looca looca = new Looca();
+
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
 
+        System.out.println();
+        System.out.println("------------ Iniciando Captura Dos Dados ------------");
         Runnable taskSO = () -> {
             Sistema sistema = looca.getSistema();
 
@@ -85,7 +144,7 @@ public class App {
             Long tempoAtivdadeSO = sistema.getTempoDeAtividade() / 3600; // em horas
             System.out.println("------ Sistema Operacional ------");
 
-            SistemaOperacional sistemaOperacional = new SistemaOperacional(nomeSO, tempoAtivdadeSO);
+            SistemaOperacional sistemaOperacional = new SistemaOperacional(nomeSO, tempoAtivdadeSO, fkMaquina);
             SistemaOperacionalDAO.cadastrarSO(sistemaOperacional);
         };
 
@@ -107,7 +166,7 @@ public class App {
             memoriaTotal = Math.round(memoriaTotal * 20.0) / 20.0;
             System.out.println("------ Mémoria RAM ------");
 
-            MemoriaRam memoriaRam = new MemoriaRam(memoriaUso, memoriaDisponivel, memoriaTotal);
+            MemoriaRam memoriaRam = new MemoriaRam(memoriaUso, memoriaDisponivel, memoriaTotal, fkMaquina);
             MemoriaRamDAO.cadastrarRAM(memoriaRam);
         };
 
@@ -122,7 +181,7 @@ public class App {
 
             // Disco
             List<Disco> discos = disco.getDiscos();
-            Double tamanho;
+            double tamanho;
             Double leituras;
             Double bytesLeitura;
             Double escritas;
@@ -138,7 +197,7 @@ public class App {
                 bytesEscrita = Double.valueOf(disco1.getBytesDeEscritas());
                 tempoTranferencia = disco1.getTempoDeTransferencia();
 
-                Entidades.Disco disco00 = new Entidades.Disco(tamanho, leituras, bytesLeitura, escritas, bytesEscrita, tempoTranferencia);
+                Entidades.Disco disco00 = new Entidades.Disco(tamanho, leituras, bytesLeitura, escritas, bytesEscrita, tempoTranferencia, fkMaquina);
                 DiscoDAO.cadastrarDisco(disco00);
             }
         };
@@ -157,7 +216,7 @@ public class App {
             Double usoCPU = processador.getUso();
             System.out.println("------ CPU ------");
 
-            Entidades.Processador cpu = new Entidades.Processador(nomeCpu, usoCPU);
+            Entidades.Processador cpu = new Entidades.Processador(nomeCpu, usoCPU, fkMaquina);
             ProcessadorDAO.cadastrarCPU(cpu);
         };
 
@@ -183,7 +242,7 @@ public class App {
                 titulo = janela.getTitulo();
                 pidJanela = janela.getPid();
 
-                Entidades.Janelas janela00 = new Janelas(idJanela, titulo, pidJanela, totalJanelas);
+                Entidades.Janelas janela00 = new Janelas(idJanela, titulo, pidJanela, totalJanelas, fkMaquina);
 
                 if (titulo != null && !titulo.isEmpty()){
                     JanelasDAO.cadastrarJanelas(janela00);
@@ -199,7 +258,8 @@ public class App {
 
         LocalTime horaAtual = LocalTime.now();
 
-        if (horaAtual.getHour() > 17){
+        if (horaAtual.getHour() >= 17){
+            System.out.println("Encerrando aplicação...");
             executor.shutdown();
             System.exit(0);
         }

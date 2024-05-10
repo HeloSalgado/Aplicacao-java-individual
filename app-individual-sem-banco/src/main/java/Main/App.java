@@ -176,9 +176,8 @@ public class App {
             Long idJanela;
             String titulo;
             Long pidJanela;
-            Integer totalJanelas = janelas.getTotalJanelas();
+
             System.out.println("------ Janelas ------");
-            System.out.println("Total Janelas: " + totalJanelas);
 
             for (Janela janela : janela1) {
                 idJanela = janela.getJanelaId();

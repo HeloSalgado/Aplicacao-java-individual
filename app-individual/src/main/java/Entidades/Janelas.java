@@ -5,12 +5,14 @@ public class Janelas {
     private String titulo;
     private Long pid;
     private Integer total;
+    private Integer fkMaquina;
 
-    public Janelas(Long id, String titulo, Long pid, Integer total) {
+    public Janelas(Long id, String titulo, Long pid, Integer total, Integer fkMaquina) {
         this.id = id;
         this.titulo = titulo;
         this.pid = pid;
         this.total = total;
+        this.fkMaquina = fkMaquina;
     }
 
     public Long getId() {
@@ -27,5 +29,13 @@ public class Janelas {
 
     public Integer getTotal() {
         return total;
+    }
+
+    public Integer getFkMaquina() {
+        return fkMaquina;
+    }
+
+    public void setFkMaquina(Integer fkMaquina) {
+        this.fkMaquina = fkMaquina;
     }
 }

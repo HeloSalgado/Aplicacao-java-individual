@@ -3,6 +3,8 @@ package Entidades;
 import Models.UsuarioDAO;
 import Main.App;
 
+import java.awt.*;
+import java.io.Console;
 import java.util.Scanner;
 
 public class Usuario {
@@ -17,27 +19,27 @@ public class Usuario {
     public static void FazerLogin(){
         Scanner leitor = new Scanner(System.in);
 
-        System.out.println();
-        System.out.println("******** Entre na sua conta ********");
-        System.out.print("Email: ");
+        System.out.println("+-------------------------------+");
+        System.out.println("|       Entre na sua conta      ");
+        System.out.print("| Email: ");
         String email = leitor.next();
 
-        System.out.print("Senha: ");
+        System.out.print("| Senha: ");
         String senha = leitor.next();
+        System.out.println("+-------------------------------+");
 
         Usuario usuario = new Usuario(email, senha);
 
-        Boolean usuarioExiste = UsuarioDAO.verificarUsuario(usuario);
+        boolean usuarioExiste = UsuarioDAO.verificarUsuario(usuario);
 
         if (usuarioExiste){
-            System.out.println(" ");
-            System.out.println("******** Iniciando Captura Dos Dados ********");
             App.Menu();
         } else {
             System.out.println("Dados incorretos, tente novamente.");
             FazerLogin();
         }
     }
+
 
     public String getEmail() {
         return email;
