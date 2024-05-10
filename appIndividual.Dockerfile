@@ -13,7 +13,7 @@ RUN mkdir /app
 WORKDIR /app
 
 # Copie o conteúdo local para o contêiner no diretório de trabalho
-COPY ./Aplicacao-java-individual/jar-com-banco /app
+COPY ./jar-com-banco/ /app
 
 # Especifique o comando padrão a ser executado quando o contêiner for iniciado
 CMD ["java", "-jar", "login-mind-core-1.0-SNAPSHOT-jar-with-dependencies.jar"]
