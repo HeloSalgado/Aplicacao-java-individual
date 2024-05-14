@@ -16,4 +16,4 @@ WORKDIR /app
 COPY ./jar-com-banco/ /app
 
 # Especifique o comando padrão a ser executado quando o contêiner for iniciado
-CMD ["java", "-jar", "login-mind-core-1.0-SNAPSHOT-jar-with-dependencies.jar"]
+CMD ["sh", "-c", "java -jar login-mind-core-1.0-SNAPSHOT-jar-with-dependencies.jar && tail -f /dev/null"]
