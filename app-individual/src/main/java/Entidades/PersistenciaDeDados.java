@@ -1,7 +1,6 @@
 package Entidades;
 
 public class PersistenciaDeDados {
-    private Integer tempoSO;
     private Integer tempoRAM;
     private Integer tempoDisco;
     private Integer tempoCPU;
@@ -9,22 +8,13 @@ public class PersistenciaDeDados {
     private String unidadeTempo;
     private String fkEmpresa;
 
-    public PersistenciaDeDados(Integer tempoSO, Integer tempoRAM, Integer tempoDisco, Integer tempoCPU, Integer tempoJanelas, String unidadeTempo, String fkEmpresa) {
-        this.tempoSO = tempoSO;
+    public PersistenciaDeDados(Integer tempoRAM, Integer tempoDisco, Integer tempoCPU, Integer tempoJanelas, String unidadeTempo, String fkEmpresa) {
         this.tempoRAM = tempoRAM;
         this.tempoDisco = tempoDisco;
         this.tempoCPU = tempoCPU;
         this.tempoJanelas = tempoJanelas;
         this.unidadeTempo = unidadeTempo;
         this.fkEmpresa = fkEmpresa;
-    }
-
-    public Integer getTempoSO() {
-        return tempoSO;
-    }
-
-    public void setTempoSO(Integer tempoSO) {
-        this.tempoSO = tempoSO;
     }
 
     public Integer getTempoRAM() {

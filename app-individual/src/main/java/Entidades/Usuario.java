@@ -4,6 +4,7 @@ import Models.UsuarioDAO;
 import Main.App;
 
 import java.awt.*;
+import java.io.IOException;
 import java.util.Scanner;
 
 public class Usuario {
@@ -15,7 +16,7 @@ public class Usuario {
         this.senha = senha;
     }
 
-    public static void fazerLogin(){
+    public static void fazerLogin() throws IOException {
         Scanner leitor = new Scanner(System.in);
 
         System.out.println("+-------------------------------------------+");

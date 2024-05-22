@@ -16,13 +16,12 @@ public class PersistenciaDAO {
 
         try {
             ps = Conexao.getConexao().prepareStatement(sql);
-            ps.setInt(1, dadosPersistencia.getTempoSO());
-            ps.setInt(2, dadosPersistencia.getTempoRAM());
-            ps.setInt(3, dadosPersistencia.getTempoDisco());
-            ps.setInt(4, dadosPersistencia.getTempoCPU());
-            ps.setInt(5, dadosPersistencia.getTempoJanelas());
-            ps.setString(6, dadosPersistencia.getUnidadeTempo());
-            ps.setString(7, dadosPersistencia.getFkEmpresa());
+            ps.setInt(1, dadosPersistencia.getTempoRAM());
+            ps.setInt(2, dadosPersistencia.getTempoDisco());
+            ps.setInt(3, dadosPersistencia.getTempoCPU());
+            ps.setInt(4, dadosPersistencia.getTempoJanelas());
+            ps.setString(5, dadosPersistencia.getUnidadeTempo());
+            ps.setString(6, dadosPersistencia.getFkEmpresa());
             ps.execute();
 
         } catch (Exception e) {
@@ -35,8 +34,6 @@ public class PersistenciaDAO {
         String select = "select * from PersistenciaDeDados where fkEmpresa = ?";
         PreparedStatement psSelect = null;
 
-        String updateSO = "update PersistenciaDeDados set tempoSO = ? where fkEmpresa = ?";
-        PreparedStatement psUpdateSO = null;
         String updateRAM = "update PersistenciaDeDados set tempoRAM = ? where fkEmpresa = ?";
         PreparedStatement psUpdateRAM = null;
         String updateDisco = "update PersistenciaDeDados set tempoDisco = ? where fkEmpresa = ?";
@@ -56,11 +53,6 @@ public class PersistenciaDAO {
             rs = psSelect.executeQuery();
 
             if (rs.next()){
-                psUpdateSO = Conexao.getConexao().prepareStatement(updateSO);
-                psUpdateSO.setInt(1, dadosPersistencia.getTempoSO());
-                psUpdateSO.setString(2, dadosPersistencia.getFkEmpresa());
-                psUpdateSO.executeUpdate();
-
                 psUpdateRAM = Conexao.getConexao().prepareStatement(updateRAM);
                 psUpdateRAM.setInt(1, dadosPersistencia.getTempoRAM());
                 psUpdateRAM.setString(2, dadosPersistencia.getFkEmpresa());
@@ -99,7 +91,7 @@ public class PersistenciaDAO {
     }
 
     public static List<String> temPersistencia(PersistenciaDeDados dadosPersistencia) {
-        String sql = "select tempoSO, tempoRAM, tempoDisco, tempoCPU, tempoJanelas, unidadeTempo from PersistenciaDeDados where fkEmpresa = ?";
+        String sql = "select tempoRAM, tempoDisco, tempoCPU, tempoJanelas, unidadeTempo from PersistenciaDeDados where fkEmpresa = ?";
         PreparedStatement ps = null;
         ResultSet rs = null;
 
@@ -111,7 +103,6 @@ public class PersistenciaDAO {
             List<String> dados = new ArrayList<>();
 
             if (rs.next()){
-                dados.add(String.valueOf(rs.getInt("tempoSO")));
                 dados.add(String.valueOf(rs.getInt("tempoRAM")));
                 dados.add(String.valueOf(rs.getInt("tempoDisco")));
                 dados.add(String.valueOf(rs.getInt("tempoCPU")));

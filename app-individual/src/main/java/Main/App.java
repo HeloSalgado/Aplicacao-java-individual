@@ -1,6 +1,7 @@
 package Main;
 
 import Entidades.*;
+import Logs.LogGenerator;
 import Models.*;
 import com.github.britooo.looca.api.core.Looca;
 import com.github.britooo.looca.api.group.discos.Disco;
@@ -13,16 +14,24 @@ import com.github.britooo.looca.api.group.rede.Rede;
 
 import com.github.britooo.looca.api.group.sistema.Sistema;
 
+import java.io.IOException;
+import java.nio.file.FileStore;
+import java.nio.file.FileSystems;
 import java.sql.Time;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Scanner;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class App {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+
         System.out.println("""       
                          
                 ███╗   ███╗██╗███╗   ██╗██████╗      ██████╗ ██████╗ ██████╗ ███████╗
@@ -37,7 +46,7 @@ public class App {
         Usuario.fazerLogin();
     }
 
-    public static void menu() {
+    public static void menu() throws IOException {
         Looca looca = new Looca();
 
         Rede rede = looca.getRede();
@@ -53,8 +62,7 @@ public class App {
             System.exit(0);
         }
 
-
-        PersistenciaDeDados persistenciaDeDados01 = new PersistenciaDeDados(0, 0, 0, 0,0, "", fkEmpresa);
+        PersistenciaDeDados persistenciaDeDados01 = new PersistenciaDeDados(0, 0, 0, 0,"", fkEmpresa);
         List<String> dadosPersistencia = PersistenciaDAO.temPersistencia(persistenciaDeDados01);
 
         int opcao = 0;
@@ -74,7 +82,7 @@ public class App {
             if (opcao == 1){
                 definicaoDeParametros(opcao, fkEmpresa, idMaquina);
             } else {
-                CapturarDados(idMaquina, Integer.valueOf(dadosPersistencia.get(0)), Integer.valueOf(dadosPersistencia.get(1)), Integer.valueOf(dadosPersistencia.get(2)), Integer.valueOf(dadosPersistencia.get(3)), Integer.valueOf(dadosPersistencia.get(4)), dadosPersistencia.get(5));
+                CapturarDados(idMaquina, Integer.valueOf(dadosPersistencia.get(0)), Integer.valueOf(dadosPersistencia.get(1)), Integer.valueOf(dadosPersistencia.get(2)), Integer.valueOf(dadosPersistencia.get(3)), dadosPersistencia.get(4));
             }
         } else {
             System.out.println("Parâmetros para captura dos dados ainda não foram cadastrados...");
@@ -82,7 +90,7 @@ public class App {
         }
     }
 
-    public static void definicaoDeParametros(Integer opcao, String fkEmpresa, Integer fkMaquina){
+    public static void definicaoDeParametros(Integer opcao, String fkEmpresa, Integer fkMaquina) throws IOException {
         Scanner leitor = new Scanner(System.in);
 
         System.out.println("""
@@ -98,9 +106,6 @@ public class App {
         }
 
         System.out.println("De quanto em quanto tempo deseja capturar os seguintes dados?");
-        System.out.print("Sistema Operacional: ");
-        int tempoCapturaSO = leitor.nextInt();
-
         System.out.print("Memória RAM: ");
         int tempoCapturaRAM = leitor.nextInt();
 
@@ -113,12 +118,12 @@ public class App {
         System.out.print("Janelas: ");
         int tempoCapturaJanelas = leitor.nextInt();
 
-        if (tempoCapturaSO <= 0 || tempoCapturaRAM <= 0 || tempoCapturaDisco <= 0 || tempoCapturaCPU <= 0 || tempoCapturaJanelas <= 0){
+        if (tempoCapturaRAM <= 0 || tempoCapturaDisco <= 0 || tempoCapturaCPU <= 0 || tempoCapturaJanelas <= 0){
             System.out.println("Tempo deve ser maior que 0");
             definicaoDeParametros(opcao, fkEmpresa, fkMaquina);
         }
 
-        PersistenciaDeDados persistenciaDeDados = new PersistenciaDeDados(tempoCapturaSO, tempoCapturaRAM, tempoCapturaDisco, tempoCapturaCPU, tempoCapturaJanelas, unidadeTempo, fkEmpresa);
+        PersistenciaDeDados persistenciaDeDados = new PersistenciaDeDados(tempoCapturaRAM, tempoCapturaDisco, tempoCapturaCPU, tempoCapturaJanelas, unidadeTempo, fkEmpresa);
 
         if (opcao == 1){
             PersistenciaDAO.atualizarPersistencia(persistenciaDeDados);
@@ -126,36 +131,40 @@ public class App {
             PersistenciaDAO.cadastrarPersistencia(persistenciaDeDados);
         }
 
-        CapturarDados(fkMaquina, tempoCapturaSO, tempoCapturaRAM, tempoCapturaDisco, tempoCapturaCPU, tempoCapturaJanelas, unidadeTempo);
+        CapturarDados(fkMaquina, tempoCapturaRAM, tempoCapturaDisco, tempoCapturaCPU, tempoCapturaJanelas, unidadeTempo);
     }
 
-    public static void CapturarDados(Integer fkMaquina, Integer tempoCapturaSO, Integer tempoCapturaRAM, Integer tempoCapturaDisco, Integer tempoCapturaCPU, Integer tempoCapturaJanela, String unidadeTempo) {
+    public static void CapturarDados(Integer fkMaquina, Integer tempoCapturaRAM, Integer tempoCapturaDisco, Integer tempoCapturaCPU, Integer tempoCapturaJanela, String unidadeTempo) throws IOException {
         Looca looca = new Looca();
+        Sistema sistema = looca.getSistema();
+
+        LocalDateTime dataHoraAtual = LocalDateTime.now();
+        Locale localeBR = new Locale("pt", "BR");
+        DateTimeFormatter formato = DateTimeFormatter.ofPattern("EEEE, dd 'de' MMMM 'de' yyyy HH:mm:ss", localeBR);
+        String dataFormatada = dataHoraAtual.format(formato);
+
+        String javaVersion = System.getProperty("java.version");
+        String nomeSO = sistema.getSistemaOperacional();
+        String versaoSO = System.getProperty("os.version");
+        String arqSO = System.getProperty("os.arch");
+
+        LogGenerator.gerarLogCaptura("""
+                ----------------------------------------------------------------------------------
+                ---- Nova sessão de log: %s
+                Informações do sistema:
+                    Versão do Java = %s
+                    Sistema Operacional = %s versão %s rodando na %s
+                """.formatted(dataFormatada, javaVersion, nomeSO, versaoSO, arqSO));
 
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-
         System.out.println();
         System.out.println("------------ Iniciando Captura Dos Dados ------------");
-        Runnable taskSO = () -> {
-            Sistema sistema = looca.getSistema();
-
-            // Sistemas Operacional
-            String nomeSO = sistema.getSistemaOperacional();
-            Long tempoAtivdadeSO = sistema.getTempoDeAtividade() / 3600; // em horas
-            System.out.println("------ Sistema Operacional ------");
-
-            SistemaOperacional sistemaOperacional = new SistemaOperacional(nomeSO, tempoAtivdadeSO, fkMaquina);
-            SistemaOperacionalDAO.cadastrarSO(sistemaOperacional);
-        };
-
-        if (unidadeTempo.equals("s")){
-            executor.scheduleAtFixedRate(taskSO, 0,tempoCapturaSO,TimeUnit.SECONDS);
-        } else {
-            executor.scheduleAtFixedRate(taskSO, 0,tempoCapturaSO,TimeUnit.MINUTES);
-        }
 
         Runnable taskMemoria = () -> {
             Memoria memoria = looca.getMemoria();
+            LocalDateTime momento = LocalDateTime.now();
+            DateTimeFormatter formatoSimples = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss", localeBR);
+            String dataFormatadaSimples = momento.format(formatoSimples);
 
             // Memória RAM
             Double memoriaUso = Double.valueOf(memoria.getEmUso()) / 1e+9;
@@ -168,16 +177,34 @@ public class App {
 
             MemoriaRam memoriaRam = new MemoriaRam(memoriaUso, memoriaDisponivel, memoriaTotal, fkMaquina);
             MemoriaRamDAO.cadastrarRAM(memoriaRam);
+
+            Double porcentagemMemoria = (memoriaUso / memoriaTotal) * 100;
+            porcentagemMemoria = Math.round(porcentagemMemoria * 100.0) / 100.0;
+
+            String hostName = looca.getRede().getParametros().getHostName();
+
+            if (porcentagemMemoria > 70.0) {
+                try {
+                    LogGenerator.gerarLogCaptura("[ %s ] ALERT %.2f%% da memória RAM utilizada da máquina %s".formatted(dataFormatadaSimples, porcentagemMemoria, hostName));
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
         };
 
-        if (unidadeTempo.equals("s")){
-            executor.scheduleAtFixedRate(taskMemoria, 0,tempoCapturaRAM,TimeUnit.SECONDS);
+        if (unidadeTempo.equals("s")) {
+            executor.scheduleAtFixedRate(taskMemoria, 0, tempoCapturaRAM, TimeUnit.SECONDS);
         } else {
-            executor.scheduleAtFixedRate(taskMemoria, 0,tempoCapturaRAM,TimeUnit.MINUTES);
+            executor.scheduleAtFixedRate(taskMemoria, 0, tempoCapturaRAM, TimeUnit.MINUTES);
         }
+
 
         Runnable taskDisco = () -> {
             DiscoGrupo disco = looca.getGrupoDeDiscos();
+            LocalDateTime momento = LocalDateTime.now();
+            DateTimeFormatter formatoSimples = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss", localeBR);
+            String dataFormatadaSimples = momento.format(formatoSimples);
 
             // Disco
             List<Disco> discos = disco.getDiscos();
@@ -199,6 +226,18 @@ public class App {
 
                 Entidades.Disco disco00 = new Entidades.Disco(tamanho, leituras, bytesLeitura, escritas, bytesEscrita, tempoTranferencia, fkMaquina);
                 DiscoDAO.cadastrarDisco(disco00);
+
+                String hostName = looca.getRede().getParametros().getHostName();
+
+                Double porcentagemUso = 0.0;
+                if (porcentagemUso > 10.0) {
+                    try {
+                        LogGenerator.gerarLogCaptura("[ %s ] ALERT %.2f%% do disco utilizado da máquina %s".formatted(dataFormatadaSimples, porcentagemUso, hostName));
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+
             }
         };
 
@@ -210,6 +249,10 @@ public class App {
 
         Runnable taskCPU = () -> {
             Processador processador = looca.getProcessador();
+            LocalDateTime momento = LocalDateTime.now();
+            DateTimeFormatter formatoSimples = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss", localeBR);
+            String dataFormatadaSimples = momento.format(formatoSimples);
+            String hostName = looca.getRede().getParametros().getHostName();
 
             // CPU
             String nomeCpu = processador.getNome();
@@ -218,6 +261,14 @@ public class App {
 
             Entidades.Processador cpu = new Entidades.Processador(nomeCpu, usoCPU, fkMaquina);
             ProcessadorDAO.cadastrarCPU(cpu);
+
+            if (usoCPU > 80.0) {
+                try {
+                    LogGenerator.gerarLogCaptura("[ %s ] ALERT %.2f%% da CPU utilizada da máquina %s".formatted(dataFormatadaSimples, usoCPU, hostName));
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         };
 
         if (unidadeTempo.equals("s")){
@@ -257,12 +308,11 @@ public class App {
             executor.scheduleAtFixedRate(taskJanelas, 0,tempoCapturaJanela,TimeUnit.MINUTES);
         }
 
-        LocalTime horaAtual = LocalTime.now();
 
-        if (horaAtual.getHour() >= 17){
-            System.out.println("Encerrando aplicação...");
-            executor.shutdown();
-            System.exit(0);
-        }
+//        if (dataHoraAtual.getHour() >= 17){
+//            System.out.println("Encerrando aplicação...");
+//            executor.shutdown();
+//            System.exit(0);
+//        }
     }
 }
