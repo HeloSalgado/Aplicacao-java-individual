@@ -58,7 +58,7 @@ public class App {
         String fkEmpresa = ComputadorDAO.buscarFkEmpresa(computador);
 
         if (!maquinaExiste){
-            System.out.println("Máquina não está cadastrada");
+            System.out.println("Máquina não está cadastrada, acesse o sistema Web para efetuar o cadastro e tente novamente");
             System.exit(0);
         }
 
@@ -148,17 +148,34 @@ public class App {
         String versaoSO = System.getProperty("os.version");
         String arqSO = System.getProperty("os.arch");
 
+        String unidadePorExtenso = unidadeTempo.equals("m") ? "Minutos" : "Segundos";
+
         LogGenerator.gerarLogCaptura("""
-                ----------------------------------------------------------------------------------
-                ---- Nova sessão de log: %s
+                >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                >> Nova sessão de log: %s
                 Informações do sistema:
                     Versão do Java = %s
                     Sistema Operacional = %s versão %s rodando na %s
-                """.formatted(dataFormatada, javaVersion, nomeSO, versaoSO, arqSO));
+                    Localidade do sistemas = %s
+                Parâmetros para captura = Memória RAM: %d | Disco: %d | CPU: %d | Janelas: %d | Unidade de tempo: %s
+                """.formatted(dataFormatada, javaVersion, nomeSO, versaoSO, arqSO, localeBR, tempoCapturaRAM, tempoCapturaDisco, tempoCapturaCPU, tempoCapturaJanela, unidadePorExtenso));
 
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
         System.out.println();
         System.out.println("------------ Iniciando Captura Dos Dados ------------");
+
+        Runnable taskSO = () -> {
+            Long tempoAtivdadeSO = sistema.getTempoDeAtividade() / 3600; // em horas
+            SistemaOperacional SO = new SistemaOperacional(nomeSO, tempoAtivdadeSO, fkMaquina);
+
+            try {
+                SistemaOperacionalDAO.cadastrarSO(SO);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        };
+
+        executor.scheduleAtFixedRate(taskSO, 0, 1, TimeUnit.HOURS);
 
         Runnable taskMemoria = () -> {
             Memoria memoria = looca.getMemoria();
@@ -176,7 +193,11 @@ public class App {
             System.out.println("------ Mémoria RAM ------");
 
             MemoriaRam memoriaRam = new MemoriaRam(memoriaUso, memoriaDisponivel, memoriaTotal, fkMaquina);
-            MemoriaRamDAO.cadastrarRAM(memoriaRam);
+            try {
+                MemoriaRamDAO.cadastrarRAM(memoriaRam);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
 
             Double porcentagemMemoria = (memoriaUso / memoriaTotal) * 100;
             porcentagemMemoria = Math.round(porcentagemMemoria * 100.0) / 100.0;
@@ -225,7 +246,11 @@ public class App {
                 tempoTranferencia = disco1.getTempoDeTransferencia();
 
                 Entidades.Disco disco00 = new Entidades.Disco(tamanho, leituras, bytesLeitura, escritas, bytesEscrita, tempoTranferencia, fkMaquina);
-                DiscoDAO.cadastrarDisco(disco00);
+                try {
+                    DiscoDAO.cadastrarDisco(disco00);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
 
                 String hostName = looca.getRede().getParametros().getHostName();
 
@@ -237,7 +262,6 @@ public class App {
                         throw new RuntimeException(e);
                     }
                 }
-
             }
         };
 
@@ -260,7 +284,12 @@ public class App {
             System.out.println("------ CPU ------");
 
             Entidades.Processador cpu = new Entidades.Processador(nomeCpu, usoCPU, fkMaquina);
-            ProcessadorDAO.cadastrarCPU(cpu);
+
+            try {
+                ProcessadorDAO.cadastrarCPU(cpu);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
 
             if (usoCPU > 80.0) {
                 try {
@@ -297,7 +326,11 @@ public class App {
                 Entidades.Janelas janela00 = new Janelas(idJanela, titulo, pidJanela, totalJanelas, fkMaquina);
 
                 if (titulo != null && !titulo.isEmpty()){
-                    JanelasDAO.cadastrarJanelas(janela00);
+                    try {
+                        JanelasDAO.cadastrarJanelas(janela00);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             }
         };
@@ -309,10 +342,11 @@ public class App {
         }
 
 
-//        if (dataHoraAtual.getHour() >= 17){
-//            System.out.println("Encerrando aplicação...");
-//            executor.shutdown();
-//            System.exit(0);
-//        }
+        if (dataHoraAtual.getHour() >= 17){
+            System.out.println("Encerrando aplicação...");
+            LogGenerator.gerarLogCaptura("[ %s ] Aplicação foi encerrada por conta do horário".formatted(dataHoraAtual));
+            executor.shutdown();
+            System.exit(0);
+        }
     }
 }

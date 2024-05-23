@@ -1,9 +1,6 @@
 package Logs;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -16,14 +13,19 @@ public class LogGenerator {
             Files.createDirectory(path);
         }
 
-        File log = new File("C:\\Users\\helos\\OneDrive - SPTech School\\2º Semestre\\Pesquisa e Inovação II\\Aplicacao-java-individual\\logs\\logs.txt");
+        int maximoLinhas = 2000;
+        int fileIndex = 1;
+        File log = new File("C:\\Users\\helos\\OneDrive - SPTech School\\2º Semestre\\Pesquisa e Inovação II\\Aplicacao-java-individual\\logs\\logs_captura" + fileIndex + ".txt");
+
+        // Encontrar o arquivo de log que não excede o máximo de linhas
+        while (log.exists() && contarLinhas(log) >= maximoLinhas) {
+            fileIndex++;
+            log = new File("C:\\Users\\helos\\OneDrive - SPTech School\\2º Semestre\\Pesquisa e Inovação II\\Aplicacao-java-individual\\logs\\logs_captura" + fileIndex + ".txt");
+        }
 
         if (!log.exists()) {
             log.createNewFile();
         }
-
-        int maximoLinhas = 100; // Número máximo de linhas antes de criar um novo arquivo
-        int contadorLinhas = 0;
 
         FileWriter fw = new FileWriter(log, true);
         BufferedWriter bw = new BufferedWriter(fw);
@@ -31,28 +33,8 @@ public class LogGenerator {
         bw.write(mensagem);
         bw.newLine();
 
-        contadorLinhas++;
-
-        if (contadorLinhas >= maximoLinhas) {
-            bw.close();
-            fw.close();
-
-            int fileIndex = 1;
-            File newLogFile = new File("C:\\Users\\helos\\OneDrive - SPTech School\\2º Semestre\\Pesquisa e Inovação II\\Aplicacao-java-individual\\logs\\logs_" + fileIndex + ".txt");
-            while (newLogFile.exists()) {
-                fileIndex++;
-                newLogFile = new File("C:\\Users\\helos\\OneDrive - SPTech School\\2º Semestre\\Pesquisa e Inovação II\\Aplicacao-java-individual\\logs\\logs_" + fileIndex + ".txt");
-            }
-
-            // Cria o novo arquivo de log
-            newLogFile.createNewFile();
-
-            // Atualiza o contador de linhas e o arquivo de log atual
-            contadorLinhas = 0;
-            log = newLogFile;
-            fw = new FileWriter(log, true);
-            bw = new BufferedWriter(fw);
-        }
+        bw.close();
+        fw.close();
     }
 
     public static void gerarLogUsuarios(String mensagem) throws IOException {
@@ -62,7 +44,15 @@ public class LogGenerator {
             Files.createDirectory(path);
         }
 
-        File logUser = new File("C:\\Users\\helos\\OneDrive - SPTech School\\2º Semestre\\Pesquisa e Inovação II\\Aplicacao-java-individual\\logs\\logsUsuarios.txt");
+        int maximoLinhas = 2000;
+        int fileIndex = 1;
+        File logUser = new File("C:\\Users\\helos\\OneDrive - SPTech School\\2º Semestre\\Pesquisa e Inovação II\\Aplicacao-java-individual\\logs\\logs_usuarios" + fileIndex + ".txt");
+
+        // Encontrar o arquivo de log que não excede o máximo de linhas
+        while (logUser.exists() && contarLinhas(logUser) >= maximoLinhas) {
+            fileIndex++;
+            logUser = new File("C:\\Users\\helos\\OneDrive - SPTech School\\2º Semestre\\Pesquisa e Inovação II\\Aplicacao-java-individual\\logs\\logs_usuarios" + fileIndex + ".txt");
+        }
 
         if (!logUser.exists()) {
             logUser.createNewFile();
@@ -85,8 +75,15 @@ public class LogGenerator {
             Files.createDirectory(path);
         }
 
-        File logErro = new File("C:\\Users\\helos\\OneDrive - SPTech School\\2º Semestre\\Pesquisa e Inovação II\\Aplicacao-java-individual\\logs\\logsErros.txt");
+        int maximoLinhas = 2000;
+        int fileIndex = 1;
+        File logErro = new File("C:\\Users\\helos\\OneDrive - SPTech School\\2º Semestre\\Pesquisa e Inovação II\\Aplicacao-java-individual\\logs\\logs_erros" + fileIndex + ".txt");
 
+        // Encontrar o arquivo de log que não excede o máximo de linhas
+        while (logErro.exists() && contarLinhas(logErro) >= maximoLinhas) {
+            fileIndex++;
+            logErro = new File("C:\\Users\\helos\\OneDrive - SPTech School\\2º Semestre\\Pesquisa e Inovação II\\Aplicacao-java-individual\\logs\\logs_erros" + fileIndex + ".txt");
+        }
         if (!logErro.exists()) {
             logErro.createNewFile();
         }
@@ -99,5 +96,45 @@ public class LogGenerator {
 
         bw.close();
         fw.close();
+    }
+
+    public static void gerarLogBD(String mensagem) throws IOException {
+        Path path = Paths.get("C:\\Users\\helos\\OneDrive - SPTech School\\2º Semestre\\Pesquisa e Inovação II\\Aplicacao-java-individual\\logs");
+
+        if (!Files.exists(path)){
+            Files.createDirectory(path);
+        }
+
+        int maximoLinhas = 2000;
+        int fileIndex = 1;
+        File logBD = new File("C:\\Users\\helos\\OneDrive - SPTech School\\2º Semestre\\Pesquisa e Inovação II\\Aplicacao-java-individual\\logs\\logs_bancodedados" + fileIndex + ".txt");
+
+        // Encontrar o arquivo de log que não excede o máximo de linhas
+        while (logBD.exists() && contarLinhas(logBD) >= maximoLinhas) {
+            fileIndex++;
+            logBD = new File("C:\\Users\\helos\\OneDrive - SPTech School\\2º Semestre\\Pesquisa e Inovação II\\Aplicacao-java-individual\\logs\\logs_bancodedados" + fileIndex + ".txt");
+        }
+        if (!logBD.exists()) {
+            logBD.createNewFile();
+        }
+
+        FileWriter fw = new FileWriter(logBD, true);
+        BufferedWriter bw = new BufferedWriter(fw);
+
+        bw.write(mensagem);
+        bw.newLine();
+
+        bw.close();
+        fw.close();
+    }
+
+    private static int contarLinhas(File file) throws IOException {
+        BufferedReader reader = new BufferedReader(new FileReader(file));
+        int linhas = 0;
+        while (reader.readLine() != null) {
+            linhas++;
+        }
+        reader.close();
+        return linhas;
     }
 }

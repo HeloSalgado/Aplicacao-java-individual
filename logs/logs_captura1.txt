@@ -1,0 +1,48 @@
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+>> Nova sessão de log: quinta-feira, 23 de maio de 2024 11:59:15
+Informações do sistema:
+    Versão do Java = 17.0.9
+    Sistema Operacional = Windows versão 10.0 rodando na amd64
+    Localidade do sistemas = pt_BR
+Parâmetros para captura = Memória RAM: 14 | Disco: 15 | CPU: 17 | Janelas: 80 | Unidade de tempo: Segundos
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+>> Nova sessão de log: quinta-feira, 23 de maio de 2024 12:06:50
+Informações do sistema:
+    Versão do Java = 17.0.9
+    Sistema Operacional = Windows versão 10.0 rodando na amd64
+    Localidade do sistemas = pt_BR
+Parâmetros para captura = Memória RAM: 14 | Disco: 15 | CPU: 17 | Janelas: 80 | Unidade de tempo: Segundos
+
+[ 23/05/2024 12:06:51 ] ALERT 93,75% da memória RAM utilizada da máquina SALGADO
+[ 23/05/2024 12:06:52 ] ALERT 100,00% da CPU utilizada da máquina SALGADO
+[ 23/05/2024 12:07:05 ] ALERT 97,50% da memória RAM utilizada da máquina SALGADO
+[ 23/05/2024 12:07:08 ] ALERT 100,00% da CPU utilizada da máquina SALGADO
+[ 23/05/2024 12:07:19 ] ALERT 97,50% da memória RAM utilizada da máquina SALGADO
+[ 23/05/2024 12:07:25 ] ALERT 91,44% da CPU utilizada da máquina SALGADO
+[ 23/05/2024 12:07:33 ] ALERT 95,00% da memória RAM utilizada da máquina SALGADO
+[ 23/05/2024 12:07:47 ] ALERT 95,00% da memória RAM utilizada da máquina SALGADO
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+>> Nova sessão de log: quinta-feira, 23 de maio de 2024 12:23:04
+Informações do sistema:
+    Versão do Java = 17.0.9
+    Sistema Operacional = Windows versão 10.0 rodando na amd64
+    Localidade do sistemas = pt_BR
+Parâmetros para captura = Memória RAM: 14 | Disco: 16 | CPU: 20 | Janelas: 25 | Unidade de tempo: Segundos
+
+[ 23/05/2024 12:23:04 ] ALERT 93,75% da memória RAM utilizada da máquina SALGADO
+[ 23/05/2024 12:23:18 ] ALERT 90,00% da memória RAM utilizada da máquina SALGADO
+[ 23/05/2024 12:23:32 ] ALERT 96,25% da memória RAM utilizada da máquina SALGADO
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+>> Nova sessão de log: quinta-feira, 23 de maio de 2024 12:31:08
+Informações do sistema:
+    Versão do Java = 17.0.9
+    Sistema Operacional = Windows versão 10.0 rodando na amd64
+    Localidade do sistemas = pt_BR
+Parâmetros para captura = Memória RAM: 5 | Disco: 14 | CPU: 12 | Janelas: 74 | Unidade de tempo: Segundos
+
+[ 23/05/2024 12:31:08 ] ALERT 93,75% da memória RAM utilizada da máquina SALGADO
+[ 23/05/2024 12:31:13 ] ALERT 91,25% da memória RAM utilizada da máquina SALGADO
+[ 23/05/2024 12:31:18 ] ALERT 95,00% da memória RAM utilizada da máquina SALGADO
+[ 23/05/2024 12:31:23 ] ALERT 92,50% da memória RAM utilizada da máquina SALGADO
+[ 23/05/2024 12:31:28 ] ALERT 87,50% da memória RAM utilizada da máquina SALGADO
