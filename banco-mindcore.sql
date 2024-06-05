@@ -139,14 +139,3 @@ dataLeitura datetime default current_timestamp,
 fkMaquina int,
 foreign key (fkMaquina) references Maquina(idMaquina)
 );
-
-select * from Maquina;
-select * from leituraSO;
-select * from leituraDisco;
-select * from leituraMemoriaRam;
-select * from leituraJanelas;
-select * from leituraCPU;
-select * from Funcionario;
-select * from Empresa;
-select * from Sala;
-select * from PersistenciaDeDados;
