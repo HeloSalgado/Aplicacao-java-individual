@@ -47,7 +47,15 @@ public class App {
 
         Rede rede = looca.getRede();
         String hostname = rede.getParametros().getHostName();
-        String ipv4 = String.valueOf((looca.getRede()).getGrupoDeInterfaces().getInterfaces().get(4).getEnderecoIpv4());
+        Sistema sistema = looca.getSistema();
+
+        int index = 0;
+
+        if (sistema.getSistemaOperacional().contains("Windows")){
+            index = 4;
+        }
+
+        String ipv4 = String.valueOf((looca.getRede()).getGrupoDeInterfaces().getInterfaces().get(index).getEnderecoIpv4());
         Computador computador = new Computador(hostname, ipv4, fkEmpresa);
 
         boolean maquinaExiste = ComputadorDAO.verificarComputador(computador);
