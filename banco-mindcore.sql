@@ -1,10 +1,12 @@
-create database MindCore;
-use MindCore;
+create database MindCore1;
+use MindCore1;
 
 create table Empresa (
 cnpj char(14) primary key unique,
 nome varchar(45),
 telefone char(11));
+
+insert into Empresa values ('12547895423658', 'SPTech', '11936587421');
 
 create table Componentes (
 idComponente int primary key auto_increment,
@@ -38,6 +40,9 @@ check (estado in('ativo', 'inativo')),
 fkEmpresa char(14),
 foreign key (fkEmpresa) references Empresa(cnpj)
 );
+
+insert into Funcionario (nome, email, senha, fkEmpresa)
+	values ('Heloisa Salgado', 'heloisa@gmail.com', '123456', '12547895423658');
 
 create table Maquina(
 idMaquina int primary key auto_increment,
@@ -95,12 +100,9 @@ foreign key (fkMaquina) references Maquina(idMaquina)
 
 create table LeituraDisco(
 idDisco int primary key auto_increment,
-tamanho double,
-leituras double,
-bytesLeitura double,
-escritas double,
-bytesEscrita double,
-tempoTransferencia long,
+disponivel varchar(20),
+total varchar(20),
+emUso varchar(20),
 dataLeitura datetime default current_timestamp,
 fkMaquina int,
 foreign key (fkMaquina) references Maquina(idMaquina)

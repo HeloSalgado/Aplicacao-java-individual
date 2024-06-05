@@ -1,4 +1,0 @@
-[ 23/05/2024 11:58:57 ] INFO - Usuário logado com sucesso = luan@gmail.com
-[ 23/05/2024 12:06:40 ] INFO - Usuário logado com sucesso = luan@gmail.com
-[ 23/05/2024 12:22:51 ] INFO - Usuário logado com sucesso = luan@gmail.com
-[ 23/05/2024 12:30:57 ] INFO - Usuário logado com sucesso = luan@gmail.com

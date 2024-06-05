@@ -1,6 +1,7 @@
 package Models;
 
 import Conexao.Conexao;
+import Entidades.Computador;
 import Entidades.Usuario;
 import Logs.LogGenerator;
 
@@ -45,5 +46,31 @@ public class UsuarioDAO {
         }
 
         return false;
+    }
+
+    public static String buscarFkEmpresa(Usuario usuario) throws IOException {
+        String sql = "select fkEmpresa from Funcionario where email = ?";
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        LocalDateTime momento = LocalDateTime.now();
+        Locale localeBR = new Locale("pt", "BR");
+        DateTimeFormatter formatoSimples = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss", localeBR);
+        String dataFormatadaSimples = momento.format(formatoSimples);
+
+        try {
+            ps = Conexao.getConexao().prepareStatement(sql);
+            ps.setString(1, usuario.getEmail());
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getString("fkEmpresa");
+            } else {
+                return null;
+            }
+
+        } catch (Exception e) {
+            LogGenerator.gerarLogBD("[ %s ] SEVERE - Não foi possível efetuar o select da FK da empresa no banco de dados | %s | %s".formatted(dataFormatadaSimples, e.getMessage(), e.getCause()));
+            throw new RuntimeException(e);
+        }
     }
 }

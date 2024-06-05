@@ -21,37 +21,25 @@ public class Usuario {
 
         System.out.println("+-------------------------------------------+");
         System.out.println("|            Entre na sua conta              ");
-        System.out.println("|   Pressione a tecla [ENTER] para começar   ");
+        System.out.print("| Email: ");
+        String email = leitor.next();
 
-        if (leitor.hasNextLine()) {
-            System.out.print("| Email: ");
-            String email = leitor.next();
+        System.out.print("| Senha: ");
+        String senha = leitor.next();
+        System.out.println("+-------------------------------------------+");
 
-            // Verifica se há mais entradas disponíveis antes de solicitar a senha
-            if (leitor.hasNextLine()) {
-                System.out.print("| Senha: ");
-                String senha = leitor.next();
-                System.out.println("+-------------------------------------------+");
+        Usuario usuario = new Usuario(email, senha);
 
-                Usuario usuario = new Usuario(email, senha);
+        boolean usuarioExiste = UsuarioDAO.verificarUsuario(usuario);
 
-                boolean usuarioExiste = UsuarioDAO.verificarUsuario(usuario);
-
-                if (usuarioExiste) {
-                    App.menu();
-                } else {
-                    System.out.println("Dados incorretos, tente novamente.");
-                    fazerLogin(); // Chama o método fazerLogin novamente após uma tentativa malsucedida
-                }
-            } else {
-                System.out.println("Entrada de senha não fornecida.");
-            }
+        if (usuarioExiste) {
+            String fkEmpresa = UsuarioDAO.buscarFkEmpresa(usuario);
+            App.menu(fkEmpresa);
         } else {
-            System.out.println("Entrada de email não fornecida.");
+            System.out.println("Dados incorretos, tente novamente.");
+            fazerLogin(); // Chama o método fazerLogin novamente após uma tentativa malsucedida
         }
     }
-
-
 
     public String getEmail() {
         return email;

@@ -1,6 +1,0 @@
-[ 23/05/2024 11:59:15 ] SEVERE - Não foi possível efetuar o insert no banco de dados | No operations allowed after connection closed.
-[ 23/05/2024 11:59:17 ] SEVERE - Não foi possível efetuar o insert no banco de dados | No operations allowed after connection closed.
-[ 23/05/2024 11:59:26 ] SEVERE - Não foi possível efetuar o insert no banco de dados | No operations allowed after connection closed.
-[ 23/05/2024 11:59:26 ] SEVERE - Não foi possível efetuar o insert no banco de dados | No operations allowed after connection closed.
-[ 23/05/2024 12:23:04 ] SEVERE - Não foi possível efetuar o update dos parâmetros de coleta de dados no banco de dados | Table 'mindcore.persistenciadedado' doesn't exist | null
-[ 23/05/2024 12:31:08 ] SEVERE - Não foi possível efetuar o update dos parâmetros de coleta de dados no banco de dados | Table 'mindcore.persistenciadedado' doesn't exist | null

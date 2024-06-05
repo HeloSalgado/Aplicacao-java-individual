@@ -16,8 +16,8 @@ import java.util.Locale;
 
 public class PersistenciaDAO {
     public static void cadastrarPersistencia(PersistenciaDeDados dadosPersistencia) throws IOException {
-        String sql = "insert into PersistenciaDeDados (tempoSO, tempoRAM, tempoDisco, tempoCPU, tempoJanelas, unidadeTempo, fkEmpresa)" +
-                "values (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "insert into PersistenciaDeDados (tempoRAM, tempoDisco, tempoCPU, tempoJanelas, unidadeTempo, fkEmpresa)" +
+                "values (?, ?, ?, ?, ?, ?)";
         PreparedStatement ps = null;
         LocalDateTime momento = LocalDateTime.now();
         Locale localeBR = new Locale("pt", "BR");

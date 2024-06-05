@@ -1,0 +1,8 @@
+[ 05/06/2024 11:39:49 ] INFO - Usuário logado com sucesso = luan@gmail.com
+[ 05/06/2024 11:40:23 ] INFO - Usuário logado com sucesso = luan@gmail.com
+[ 05/06/2024 11:43:02 ] INFO - Usuário logado com sucesso = luan@gmail.com
+[ 05/06/2024 11:45:44 ] INFO - Usuário logado com sucesso = heloisa@gmail.com
+[ 05/06/2024 11:49:53 ] INFO - Usuário logado com sucesso = heloisa@gmail.com
+[ 05/06/2024 11:57:44 ] INFO - Usuário logado com sucesso = heloisa@gmail.com
+[ 05/06/2024 12:03:37 ] INFO - Usuário logado com sucesso = heloisa@gmail.com
+[ 05/06/2024 12:11:58 ] INFO - Usuário logado com sucesso = heloisa@gmail.com

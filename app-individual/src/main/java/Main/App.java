@@ -4,8 +4,8 @@ import Entidades.*;
 import Logs.LogGenerator;
 import Models.*;
 import com.github.britooo.looca.api.core.Looca;
-import com.github.britooo.looca.api.group.discos.Disco;
 import com.github.britooo.looca.api.group.discos.DiscoGrupo;
+import com.github.britooo.looca.api.group.discos.Volume;
 import com.github.britooo.looca.api.group.janelas.Janela;
 import com.github.britooo.looca.api.group.janelas.JanelaGrupo;
 import com.github.britooo.looca.api.group.memoria.Memoria;
@@ -15,13 +15,9 @@ import com.github.britooo.looca.api.group.rede.Rede;
 import com.github.britooo.looca.api.group.sistema.Sistema;
 
 import java.io.IOException;
-import java.nio.file.FileStore;
-import java.nio.file.FileSystems;
-import java.sql.Time;
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
@@ -30,6 +26,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class App {
+
     public static void main(String[] args) throws IOException {
 
         System.out.println("""       
@@ -40,27 +37,26 @@ public class App {
                 ██║╚██╔╝██║██║██║╚██╗██║██║  ██║    ██║     ██║   ██║██╔══██╗██╔══╝ \s
                 ██║ ╚═╝ ██║██║██║ ╚████║██████╔╝    ╚██████╗╚██████╔╝██║  ██║███████╗
                 ╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝╚═════╝      ╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝
-                                                                                    \s               
                 """);
 
         Usuario.fazerLogin();
     }
 
-    public static void menu() throws IOException {
+    public static void menu(String fkEmpresa) throws IOException {
         Looca looca = new Looca();
 
         Rede rede = looca.getRede();
         String hostname = rede.getParametros().getHostName();
-        Computador computador = new Computador(hostname);
+        String ipv4 = String.valueOf((looca.getRede()).getGrupoDeInterfaces().getInterfaces().get(4).getEnderecoIpv4());
+        Computador computador = new Computador(hostname, ipv4, fkEmpresa);
 
         boolean maquinaExiste = ComputadorDAO.verificarComputador(computador);
-        Integer idMaquina = ComputadorDAO.buscarIdMaquina(computador);
-        String fkEmpresa = ComputadorDAO.buscarFkEmpresa(computador);
 
         if (!maquinaExiste){
-            System.out.println("Máquina não está cadastrada, acesse o sistema Web para efetuar o cadastro e tente novamente");
-            System.exit(0);
+            ComputadorDAO.cadastrarComputador(computador);
         }
+
+        Integer idMaquina = ComputadorDAO.buscarIdMaquina(computador);
 
         PersistenciaDeDados persistenciaDeDados01 = new PersistenciaDeDados(0, 0, 0, 0,"", fkEmpresa);
         List<String> dadosPersistencia = PersistenciaDAO.temPersistencia(persistenciaDeDados01);
@@ -157,8 +153,8 @@ public class App {
                     Versão do Java = %s
                     Sistema Operacional = %s versão %s rodando na %s
                     Localidade do sistemas = %s
-                Parâmetros para captura = Memória RAM: %d | Disco: %d | CPU: %d | Janelas: %d | Unidade de tempo: %s
-                """.formatted(dataFormatada, javaVersion, nomeSO, versaoSO, arqSO, localeBR, tempoCapturaRAM, tempoCapturaDisco, tempoCapturaCPU, tempoCapturaJanela, unidadePorExtenso));
+                Parâmetros para captura = Memória RAM: %d %s | Disco: %d %s | CPU: %d %s | Janelas: %d %s
+                """.formatted(dataFormatada, javaVersion, nomeSO, versaoSO, arqSO, localeBR, tempoCapturaRAM, unidadePorExtenso, tempoCapturaDisco, unidadePorExtenso, tempoCapturaCPU, unidadePorExtenso, tempoCapturaJanela, unidadePorExtenso));
 
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
         System.out.println();
@@ -223,44 +219,43 @@ public class App {
 
         Runnable taskDisco = () -> {
             DiscoGrupo disco = looca.getGrupoDeDiscos();
+            String hostName = looca.getRede().getParametros().getHostName();
             LocalDateTime momento = LocalDateTime.now();
             DateTimeFormatter formatoSimples = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss", localeBR);
             String dataFormatadaSimples = momento.format(formatoSimples);
 
             // Disco
-            List<Disco> discos = disco.getDiscos();
-            double tamanho;
-            Double leituras;
-            Double bytesLeitura;
-            Double escritas;
-            Double bytesEscrita;
-            Long tempoTranferencia;
+            double disponivel = 0l;
+            double total = 0l;
+            double emUso = 0l;
+            DecimalFormat df = new DecimalFormat("#.##");
+            double porcentagemUso = 0;
+
             System.out.println("------ Disco ------");
 
-            for (Disco disco1 : discos) {
-                tamanho = disco1.getTamanho() / 1e+9;
-                leituras = Double.valueOf(disco1.getLeituras());
-                bytesLeitura = Double.valueOf(disco1.getBytesDeLeitura());
-                escritas = Double.valueOf(disco1.getEscritas());
-                bytesEscrita = Double.valueOf(disco1.getBytesDeEscritas());
-                tempoTranferencia = disco1.getTempoDeTransferencia();
+            List<Volume> grupoDiscos = disco.getVolumes();
 
-                Entidades.Disco disco00 = new Entidades.Disco(tamanho, leituras, bytesLeitura, escritas, bytesEscrita, tempoTranferencia, fkMaquina);
+            for (Volume grupoDisco : grupoDiscos) {
+                disponivel = (grupoDisco.getDisponivel() / 1e+6) / 1024;
+                total = (grupoDisco.getTotal() / 1e+6) / 1024;
+                emUso = total - disponivel;
+
+                porcentagemUso = (emUso / total) * 100;
+            }
+
+            Disco disco00 = new Disco(df.format(disponivel), df.format(total), df.format(emUso), fkMaquina);
+
+            try {
+                DiscoDAO.cadastrarDisco(disco00);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+
+            if (porcentagemUso > 80.0) {
                 try {
-                    DiscoDAO.cadastrarDisco(disco00);
+                    LogGenerator.gerarLogCaptura("[ %s ] ALERT %.2f%% do DISCO utilizado da máquina %s".formatted(dataFormatadaSimples, porcentagemUso, hostName));
                 } catch (IOException e) {
                     throw new RuntimeException(e);
-                }
-
-                String hostName = looca.getRede().getParametros().getHostName();
-
-                Double porcentagemUso = 0.0;
-                if (porcentagemUso > 10.0) {
-                    try {
-                        LogGenerator.gerarLogCaptura("[ %s ] ALERT %.2f%% do disco utilizado da máquina %s".formatted(dataFormatadaSimples, porcentagemUso, hostName));
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
                 }
             }
         };
@@ -306,47 +301,49 @@ public class App {
             executor.scheduleAtFixedRate(taskCPU, 0,tempoCapturaCPU,TimeUnit.MINUTES);
         }
 
-        Runnable taskJanelas = () -> {
-            JanelaGrupo janelas = looca.getGrupoDeJanelas();
+        if (nomeSO.contains("Windows")) {
+            Runnable taskJanelas = () -> {
 
-            // Janelas
-            List<Janela> janela1 = janelas.getJanelas();
-            Long idJanela;
-            String titulo;
-            Long pidJanela;
+                // JanelasJanelaGrupo
+                JanelaGrupo janelas = looca.getGrupoDeJanelas();
 
-            Integer totalJanelas = janelas.getTotalJanelas();
-            System.out.println("------ Janelas ------");
+                List<Janela> janela1 = janelas.getJanelas();
+                Long idJanela;
+                String titulo;
+                Long pidJanela;
 
-            for (Janela janela : janela1) {
-                idJanela = janela.getJanelaId();
-                titulo = janela.getTitulo();
-                pidJanela = janela.getPid();
+                Integer totalJanelas = janelas.getTotalJanelas();
+                System.out.println("------ Janelas ------");
 
-                Entidades.Janelas janela00 = new Janelas(idJanela, titulo, pidJanela, totalJanelas, fkMaquina);
+                for (Janela janela : janela1) {
+                    idJanela = janela.getJanelaId();
+                    titulo = janela.getTitulo();
+                    pidJanela = janela.getPid();
 
-                if (titulo != null && !titulo.isEmpty()){
+                    Janelas janela00 = new Janelas(idJanela, titulo, pidJanela, totalJanelas, fkMaquina);
+
                     try {
-                        JanelasDAO.cadastrarJanelas(janela00);
-                    } catch (IOException e) {
+                        if (titulo != null && !titulo.isEmpty()) {
+                            JanelasDAO.cadastrarJanelas(janela00);
+                        }
+                    } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
                 }
+            };
+
+            if (unidadeTempo.equals("s")){
+                executor.scheduleAtFixedRate(taskJanelas, 0,tempoCapturaJanela,TimeUnit.SECONDS);
+            } else {
+                executor.scheduleAtFixedRate(taskJanelas, 0,tempoCapturaJanela,TimeUnit.MINUTES);
             }
-        };
-
-        if (unidadeTempo.equals("s")){
-            executor.scheduleAtFixedRate(taskJanelas, 0,tempoCapturaJanela,TimeUnit.SECONDS);
-        } else {
-            executor.scheduleAtFixedRate(taskJanelas, 0,tempoCapturaJanela,TimeUnit.MINUTES);
         }
 
-
-        if (dataHoraAtual.getHour() >= 17){
-            System.out.println("Encerrando aplicação...");
-            LogGenerator.gerarLogCaptura("[ %s ] Aplicação foi encerrada por conta do horário".formatted(dataHoraAtual));
-            executor.shutdown();
-            System.exit(0);
-        }
+//        if (dataHoraAtual.getHour() >= 17){
+//            System.out.println("Encerrando aplicação...");
+//            LogGenerator.gerarLogCaptura("[ %s ] Aplicação foi encerrada por conta do horário".formatted(dataHoraAtual));
+//            executor.shutdown();
+//            System.exit(0);
+//        }
     }
 }

@@ -1,0 +1,42 @@
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+>> Nova sessão de log: quarta-feira, 05 de junho de 2024 11:50:18
+Informações do sistema:
+    Versão do Java = 17.0.9
+    Sistema Operacional = Windows versão 10.0 rodando na amd64
+    Localidade do sistemas = pt_BR
+Parâmetros para captura = Memória RAM: 10 Segundos | Disco: 40 Segundos | CPU: 12 Segundos | Janelas: 80 Segundos
+
+[ 05/06/2024 11:50:18 ] ALERT 93,75% da memória RAM utilizada da máquina SALGADO
+[ 05/06/2024 11:50:30 ] ALERT 88,75% da memória RAM utilizada da máquina SALGADO
+[ 05/06/2024 11:50:38 ] ALERT 88,75% da memória RAM utilizada da máquina SALGADO
+[ 05/06/2024 11:50:48 ] ALERT 91,25% da memória RAM utilizada da máquina SALGADO
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+>> Nova sessão de log: quarta-feira, 05 de junho de 2024 11:58:11
+Informações do sistema:
+    Versão do Java = 17.0.9
+    Sistema Operacional = Windows versão 10.0 rodando na amd64
+    Localidade do sistemas = pt_BR
+Parâmetros para captura = Memória RAM: 12 Segundos | Disco: 40 Segundos | CPU: 15 Segundos | Janelas: 80 Segundos
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+>> Nova sessão de log: quarta-feira, 05 de junho de 2024 12:03:47
+Informações do sistema:
+    Versão do Java = 17.0.9
+    Sistema Operacional = Windows versão 10.0 rodando na amd64
+    Localidade do sistemas = pt_BR
+Parâmetros para captura = Memória RAM: 12 Segundos | Disco: 40 Segundos | CPU: 15 Segundos | Janelas: 80 Segundos
+
+[ 05/06/2024 12:03:47 ] ALERT 87,50% da memória RAM utilizada da máquina SALGADO
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+>> Nova sessão de log: quarta-feira, 05 de junho de 2024 12:12:11
+Informações do sistema:
+    Versão do Java = 17.0.9
+    Sistema Operacional = Windows versão 10.0 rodando na amd64
+    Localidade do sistemas = pt_BR
+Parâmetros para captura = Memória RAM: 12 Segundos | Disco: 45 Segundos | CPU: 12 Segundos | Janelas: 80 Segundos
+
+[ 05/06/2024 12:12:12 ] ALERT 92,50% da memória RAM utilizada da máquina SALGADO
+[ 05/06/2024 12:12:24 ] ALERT 88,75% da memória RAM utilizada da máquina SALGADO
+[ 05/06/2024 12:12:36 ] ALERT 92,50% da memória RAM utilizada da máquina SALGADO
+[ 05/06/2024 12:12:48 ] ALERT 91,25% da memória RAM utilizada da máquina SALGADO
+[ 05/06/2024 12:13:00 ] ALERT 91,25% da memória RAM utilizada da máquina SALGADO
